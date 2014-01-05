@@ -7,13 +7,25 @@ code. The converted code is store at clipboard.
 ## Features
 
 * support generate current tab to a markdown code when you right click on the empty area of the page.
-  [page title](page url)
+
+```
+[page title](page url)
+```
 * support generate image markdown code when right click on a image.
-  [](image url)
+
+```
+[](image url)
+```
 * support generate link markdown code when right-click on a link
-  [selectionText](link url)
+
+```
+[selectionText](link url)
+```
 * support generate imageLink markdown code when right click on a image which is contained in "a" element.
-  [[selectionText](image url)](linkurl)
+
+```
+[[selectionText](image url)](linkurl)
+```
 * support generate selectionText markdown code when select a range text and right-click.
   
 ## License-MIT
