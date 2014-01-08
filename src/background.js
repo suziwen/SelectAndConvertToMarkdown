@@ -29,6 +29,37 @@ chrome.contextMenus.create({
 
 chrome.contextMenus.create({
   parentId: copyAndConvertToMarkdownContextMenuId,
+  title: "convert selection to markdown(contain published)",
+  type: "normal",
+  contexts: ["selection"],
+  onclick: function(info, tab){
+    chrome.tabs.sendRequest(tab.id, {type: 'getSelectionHtml'}, function(selectionHtml){
+      ConvertMarkdown.selectionTo(selectionHtml, {
+        formate: "markdown", 
+        published: {title: tab.title, url: tab.url}
+      });
+    });
+  }
+});
+
+chrome.contextMenus.create({
+  parentId: copyAndConvertToMarkdownContextMenuId,
+  title: "convert selection to markdown(contain title and published)",
+  type: "normal",
+  contexts: ["selection"],
+  onclick: function(info, tab){
+    chrome.tabs.sendRequest(tab.id, {type: 'getSelectionHtml'}, function(selectionHtml){
+      ConvertMarkdown.selectionTo(selectionHtml, {
+        formate: "markdown", 
+        published: {title: tab.title, url: tab.url},
+        title: tab.title
+      });
+    });
+  }
+});
+
+chrome.contextMenus.create({
+  parentId: copyAndConvertToMarkdownContextMenuId,
   title: "link [title] (url)",
   type: "normal",
   contexts: ["link"],
@@ -62,11 +93,17 @@ var ConvertMarkdown = new (function(){
     document.execCommand('copy');
   }
   function convertToMarkdown(source, options){
+    var result = source;
     if(!!options && options.formate == 'markdown'){
-      return html2markdown(source, options);
-    }else{
-      return source;
+      result = html2markdown(source, options);
     }
+    if(!!options && !!options.published){
+      result += "\n published from :[" + options.published.title + "](" + options.published.url +")";
+    }
+    if (!!options && !!options.title){
+      result = "# " + options.title + "\n\n" + result;
+    }
+    return result;
   }
   function generateImageMarkdownCode(title, url, options){
     return "[" + title + "](" + url + ")"; 
