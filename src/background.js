@@ -21,7 +21,7 @@ chrome.contextMenus.create({
   type: "normal",
   contexts: ["selection"],
   onclick: function(info, tab){
-    chrome.tabs.sendRequest(tab.id, {type: 'getSelectionHtml'}, function(selectionHtml){
+    chrome.tabs.sendRequest(tab.id, {type: 'getSelectionHtml', configOptions: get_options()}, function(selectionHtml){
       ConvertMarkdown.selectionTo(selectionHtml, {formate: "markdown"});
     });
   }
@@ -33,7 +33,7 @@ chrome.contextMenus.create({
   type: "normal",
   contexts: ["selection"],
   onclick: function(info, tab){
-    chrome.tabs.sendRequest(tab.id, {type: 'getSelectionHtml'}, function(selectionHtml){
+    chrome.tabs.sendRequest(tab.id, {type: 'getSelectionHtml', configOptions: get_options()}, function(selectionHtml){
       ConvertMarkdown.selectionTo(selectionHtml, {
         formate: "markdown", 
         published: {title: tab.title, url: tab.url}
@@ -48,7 +48,7 @@ chrome.contextMenus.create({
   type: "normal",
   contexts: ["selection"],
   onclick: function(info, tab){
-    chrome.tabs.sendRequest(tab.id, {type: 'getSelectionHtml'}, function(selectionHtml){
+    chrome.tabs.sendRequest(tab.id, {type: 'getSelectionHtml', configOptions: get_options()}, function(selectionHtml){
       ConvertMarkdown.selectionTo(selectionHtml, {
         formate: "markdown", 
         published: {title: tab.title, url: tab.url},
@@ -95,6 +95,7 @@ var ConvertMarkdown = new (function(){
   function convertToMarkdown(source, options){
     var result = source;
     if(!!options && options.formate == 'markdown'){
+      // var reMarker = new reMarked(get_options());
       result = html2markdown(source, options);
     }
     if(!!options && !!options.published){

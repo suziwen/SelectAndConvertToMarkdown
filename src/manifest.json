@@ -9,6 +9,7 @@
     "http://*/*",
     "https://*/*"
   ],
+  "options_page": "options.html",
   "icons": {
     "16": "toolbar-copy-convert-markdown.png",
     "48": "toolbar-copy-convert-markdown.png",
