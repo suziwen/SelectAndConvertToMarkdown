@@ -6,18 +6,45 @@
 <script type="text/javascript" src="options.js" charset="utf-8"></script>
 </head>
 <body>
-<label for="link_list" class="checkbox"><input type="checkbox" id="link_list"/>link_list</label>
-<label for="h1_setext" class="checkbox"><input type="checkbox" id="h1_setext"/>h1_setext</label>
-<label for="h2_setext" class="checkbox"><input type="checkbox" id="h2_setext"/>h2_setext</label>
-<label for="h_atx_suf" class="checkbox"><input type="checkbox" id="h_atx_suf"/>h_atx_suf</label>
-<label for="gfm_code" class="checkbox"><input type="checkbox" id="gfm_code"/>gfm_code</label>
-<label for="gfm_del" class="checkbox"><input type="checkbox" id="gfm_del"/>gfm_del</label>
-<label for="gfm_tbls" class="checkbox"><input type="checkbox" id="gfm_tbls"/>gfm_tbls</label>
-<label for="tbl_edges" class="checkbox"><input type="checkbox" id="tbl_edges"/>tbl_edges</label>
-<label for="hash_lnks" class="checkbox"><input type="checkbox" id="hash_lnks"/>hash_lnks</label>
-<label for="br_only" class="checkbox"><input type="checkbox" id="br_only"/>br_only</label>
-<label for="img_url" class="checkbox"><input type="checkbox" id="img_url"/>convert_img_url_to_absolute</label>
-<label for="href_url" class="checkbox"><input type="checkbox" id="href_url"/>convert_href_url_to_absolute</label>
+<table>
+	<tr>
+		<td>图片地址是否转换成绝对地址</td>
+		<td>
+				<label for="img_url" class="checkbox"><input type="checkbox" id="img_url"/>convert_img_url_to_absolute</label>
+		</td>
+	</tr>
+	<tr>
+		<td>链接是否转换成绝对地址</td>
+		<td>
+				<label for="href_url" class="checkbox"><input type="checkbox" id="href_url"/>convert_href_url_to_absolute</label>
+		</td>
+	</tr>
+	<tr>
+		<td>解析方式</td>
+		<td>
+			<label for="render" class="radio">
+				<input id="render_html2markdown" type="radio" name="render" value="html2markdown"/>html2markdown
+				<input id="render_remarked" type="radio" name="render" value="remarked"/>remarked
+			</label>
+		</td>
+	</tr>
+	<tr id="remarked_config">
+		<td colspan="2">
+
+			<label for="link_list" class="checkbox"><input type="checkbox" id="link_list"/>link_list</label><br>
+<label for="h1_setext" class="checkbox"><input type="checkbox" id="h1_setext"/>h1_setext</label><br>
+<label for="h2_setext" class="checkbox"><input type="checkbox" id="h2_setext"/>h2_setext</label><br>
+<label for="h_atx_suf" class="checkbox"><input type="checkbox" id="h_atx_suf"/>h_atx_suf</label><br>
+<label for="gfm_code" class="checkbox"><input type="checkbox" id="gfm_code"/>gfm_code</label><br>
+<label for="gfm_del" class="checkbox"><input type="checkbox" id="gfm_del"/>gfm_del</label><br>
+<label for="gfm_tbls" class="checkbox"><input type="checkbox" id="gfm_tbls"/>gfm_tbls</label><br>
+<label for="tbl_edges" class="checkbox"><input type="checkbox" id="tbl_edges"/>tbl_edges</label><br>
+<label for="hash_lnks" class="checkbox"><input type="checkbox" id="hash_lnks"/>hash_lnks</label><br>
+<label for="br_only" class="checkbox"><input type="checkbox" id="br_only"/>br_only</label><br>
+		</td>
+	</tr>
+</table>
+
 
 <br>
 <button id="reset_options">Reset</button>

@@ -95,8 +95,13 @@ var ConvertMarkdown = new (function(){
   function convertToMarkdown(source, options){
     var result = source;
     if(!!options && options.formate == 'markdown'){
-      // var reMarker = new reMarked(get_options());
-      result = html2markdown(source, options);
+      var configOptions = get_options();
+      if (configOptions.render == 'remarked'){
+        var reMarker = new reMarked(get_options());
+        result = reMarker.render(source);
+      } else {
+        result = html2markdown(source, options);
+      }
     }
     if(!!options && !!options.published){
       result += "\n published from :[" + options.published.title + "](" + options.published.url +")";

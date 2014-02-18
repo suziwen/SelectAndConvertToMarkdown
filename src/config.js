@@ -1,5 +1,6 @@
 
 var default_options = {
+    render: 'html2markdown',
     img_url: true, 
     href_url: true, 
     link_list:  false,    // render links as references, create link list as appendix
@@ -33,8 +34,10 @@ var default_options = {
 }
 
 function save_options(){
+  var render = $('input[name="render"]:checked').val();
   var options = {
-    'link_list': $('#link_list')[0].checked
+    'render': render
+    ,'link_list': $('#link_list')[0].checked
     ,'h1_setext': $('#h1_setext')[0].checked
     ,'h2_setext': $('#h2_setext')[0].checked
     ,'h_atx_suf': $('#h_atx_suf')[0].checked
@@ -64,10 +67,16 @@ function set_options(options){
     $('#br_only')[0].checked = options.br_only;
     $('#img_url')[0].checked = options.img_url;
     $('#href_url')[0].checked = options.href_url;
+    if (options.render == 'html2markdown'){
+      $('#render_html2markdown').click();
+    } else {
+      $('#render_remarked').click();
+    }
 }
 
 function reset_options(){
   set_options(default_options);
+  localStorage['copy_convert_to_markdown'] =  JSON.stringify(default_options)
 }
 
 function get_options(){
