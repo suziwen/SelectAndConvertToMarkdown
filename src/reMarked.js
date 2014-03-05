@@ -174,7 +174,7 @@ reMarked = function(opts) {
 
 			for (var k = 0; k < links.length; k++) {
 				var title = links[k].e.title ? rep(" ", (maxlen + 2) - links[k].e.href.length) + '"' + links[k].e.title + '"' : "";
-				re += "  [" + (+k+1) + "]: " + (nodeName(links[k].e) == "a" ? links[k].e.href : links[k].e.src) + title + "\n";
+				re += "  [" + (+k) + "]: " + (nodeName(links[k].e) == "a" ? links[k].e.href : links[k].e.src) + title + "\n";
 			}
 		}
 
@@ -461,7 +461,7 @@ reMarked = function(opts) {
 					return kids;
 
 				if (cfg.link_list)
-					return "[" + kids + "] [" + (this.lnkid + 1) + "]";
+					return "[" + kids + "] [" + (this.lnkid) + "]";
 
 				return "[" + kids + "](" + href + title + ")";
 			}
@@ -475,7 +475,7 @@ reMarked = function(opts) {
 					src = this.e.getAttribute("src");
 
 				if (cfg.link_list)
-					return "![" + kids + "] [" + (this.lnkid + 1) + "]";
+					return "![" + kids + "] [" + (this.lnkid) + "]";
 
 				var title = this.e.title ? ' "'+ this.e.title + '"' : "";
 
