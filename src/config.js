@@ -1,6 +1,6 @@
 
 var default_options = {
-    render: 'html2markdown',
+    render: 'tomarkdown',
     img_url: true, 
     href_url: true, 
     link_list:  false,    // render links as references, create link list as appendix
@@ -69,8 +69,10 @@ function set_options(options){
     $('#href_url')[0].checked = options.href_url;
     if (options.render == 'html2markdown'){
       $('#render_html2markdown').click();
-    } else {
+    } else if (options.render == 'remarked') {
       $('#render_remarked').click();
+    } else {
+      $('#render_tomarkdown').click();
     }
 }
 

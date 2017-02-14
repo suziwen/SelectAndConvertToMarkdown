@@ -88,19 +88,27 @@ chrome.contextMenus.create({
 var ConvertMarkdown = new (function(){
   function copyToClipboard(text){
     var $copy = $('#copy');
-    $copy.html(text);
+    $copy.text(text);
     $copy[0].select();
     document.execCommand('copy');
   }
   function convertToMarkdown(source, options){
     var result = source;
     if(!!options && options.formate == 'markdown'){
+      var cleanSource = $.htmlClean(source, {
+    replaceStyles: [],
+    allowedTags:["a","abbr","acronym","address","area","b","bdo","big","blockquote","br","caption","center","cite","code","col","colgroup","dd","del","dfn","dl","dt","em","h1","h2","h3","h4","h5","h6","hr","i","img","ins","kbd","li","map","ol","p","pre","q","s","samp","small","strike","strong","sub","sup","table","tbody","td","tfoot","th","thead","tr","tt","u","ul"],
+    allowedAttributes: [['title'], ['id'], ['class'], ['alt'], ['src'], ['href'], ['a'], ['start'], ['name', ['a']]],
+    removeTags: ["basefont", "dir", "font", "frame", "frameset", "iframe", "isindex", "menu", "noframes"]
+      });
       var configOptions = get_options();
       if (configOptions.render == 'remarked'){
         var reMarker = new reMarked(get_options());
-        result = reMarker.render(source);
+        result = reMarker.render(cleanSource);
+      } else if (configOptions.render == 'html2markdown') {
+        result = html2markdown(cleanSource, options);
       } else {
-        result = html2markdown(source, options);
+        result = toMarkdown(cleanSource, {gfm: true})
       }
     }
     if(!!options && !!options.published){
