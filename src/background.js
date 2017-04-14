@@ -112,7 +112,7 @@ var ConvertMarkdown = new (function(){
       }
     }
     if(!!options && !!options.published){
-      result += "\n published from :[" + options.published.title + "](" + options.published.url +")";
+      result += "\n\n published from :[" + options.published.title + "](" + options.published.url +")";
     }
     if (!!options && !!options.title){
       result = "# " + options.title + "\n\n" + result;
