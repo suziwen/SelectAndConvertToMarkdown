@@ -108,7 +108,16 @@ var ConvertMarkdown = new (function(){
       } else if (configOptions.render == 'html2markdown') {
         result = html2markdown(cleanSource, options);
       } else {
-        result = toMarkdown(cleanSource, {gfm: true})
+        var prettyPrintConverter = {
+          filter: function (node) {
+            return node.nodeName === 'PRE' &&
+            node.className === 'prettyprint'
+          },
+          replacement: function (content, node) {
+            return '\n\n```' + '\n' + node.textContent + '\n```\n\n'
+          }
+        };
+        result = toMarkdown(cleanSource, {gfm: true, converters: [prettyPrintConverter]})
       }
     }
     if(!!options && !!options.published){
