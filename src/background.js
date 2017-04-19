@@ -117,7 +117,63 @@ var ConvertMarkdown = new (function(){
             return '\n\n```' + '\n' + node.textContent + '\n```\n\n'
           }
         };
-        result = toMarkdown(cleanSource, {gfm: true, converters: [prettyPrintConverter]})
+        var supConverter = {
+          filter: 'sup',
+          replacement: function (content) {
+            return '^' + content + '^'
+          }
+        };
+        var subConverter = {
+          filter: 'sub',
+          replacement: function (content) {
+            return '~' + content + '~'
+          }
+        };
+        var markConverter = {
+          filter: function(node){
+            return node.nodeName === 'MARK' || (node.nodeName === 'SPAN' && node.getAttribute('class') === 'mark');
+          },
+          replacement: function (content) {
+            return '==' + content + '=='
+          }
+        };
+        var hrefConverter = {
+          filter: function (node){
+            return node.nodeName === 'A' && node.getAttribute('href');
+          },
+          replacement: function(content, node){
+            var url = node.getAttribute('href');
+            var titlePart = node.title ? ' "' + node.title + '"' : '';
+            if (content === url) {
+              return '<' + url + '>';
+            }else if (url.match('mailto:' + content)) {
+              return '<' + content + '>'
+            } else {
+              return '[' + content + '](' + url + titlePart + ')'
+            }
+          }
+        };
+
+        var dlConverter = {
+          filter: 'dl',
+          replacement: function(content){
+            return content
+          }
+        }
+
+        var dtConverter = {
+          filter: 'dt',
+          replacement: function(content){
+            return '\n\n' + content
+          }
+        }
+        var ddConverter = {
+          filter: 'dd',
+          replacement: function(content){
+            return '\n: ' + content
+          }
+        }
+        result = toMarkdown(cleanSource, {gfm: true, converters: [prettyPrintConverter, supConverter, subConverter, markConverter, hrefConverter, dlConverter, dtConverter, ddConverter]})
       }
     }
     if(!!options && !!options.published){
