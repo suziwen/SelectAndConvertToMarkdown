@@ -97,12 +97,38 @@ var ConvertMarkdown = new (function(){
     var _$container = $("<div></div>");
     _$container.html(source);
     //删除掉不需要的元素
+    //适配博客园
     _$container.find(".cnblogs_code_toolbar").remove();
+    // 适配使用 syntaxhighlighter 的高亮插件
+    _$container.find(".syntaxhighlighter").map(function(index, element){
+      var $element = $(element);
+      var language = null;
+      for (var _i=0; _i < element.classList.length; _i++){
+        var className = element.classList[_i];
+        if (!/^syntaxhighlighter|syntaxhighlighter$/i.test(className)){
+          language = className;
+          break
+        }
+      }
+      var $code = $element.find('.code');
+      if ($code.length > 0) {
+        $code.find('.line').append('\n');
+        var codeContent = $code.text();
+        var $div = $('<div></div>');
+        $div.text(codeContent);
+        codeContent = $div.html();
+        if (language){
+          $element.replaceWith("<div class='highlight highlight-" + language+ "'><pre>" +codeContent+ "</pre></div>");
+        } else {
+          $element.replaceWith("<pre><code>" +codeContent+ "</code></pre>");
+        }
+      }
+    });
     result = _$container.html();
     if(!!options && options.formate == 'markdown'){
       var cleanSource = $.htmlClean(result, {
     replaceStyles: [],
-    allowedTags:["a","abbr","acronym","address","area","b","bdo","big","blockquote","br","caption","center","cite","code","col","colgroup","dd","del","dfn","dl","dt","em","h1","h2","h3","h4","h5","h6","hr","i","img","ins","kbd","li","map","ol","p","pre","q","s","samp","small","strike","strong","sub","sup","table","tbody","td","tfoot","th","thead","tr","tt","u","ul"],
+    allowedTags:["div", "a","abbr","acronym","address","area","b","bdo","big","blockquote","br","caption","center","cite","code","col","colgroup","dd","del","dfn","dl","dt","em","h1","h2","h3","h4","h5","h6","hr","i","img","ins","kbd","li","map","ol","p","pre","q","s","samp","small","strike","strong","sub","sup","table","tbody","td","tfoot","th","thead","tr","tt","u","ul"],
     allowedAttributes: [['title'], ['id'], ['class'], ['alt'], ['src'], ['href'], ['a'], ['start'], ['name', ['a']]],
     removeTags: ["basefont", "dir", "font", "frame", "frameset", "iframe", "isindex", "menu", "noframes"]
       });
@@ -124,12 +150,30 @@ var ConvertMarkdown = new (function(){
         };
         var preConverter = {
           filter: function (node) {
-            return node.nodeName === 'PRE' &&
-            node.firstChild &&
-            node.firstChild.nodeName !== 'CODE'
+            return node.nodeName === 'PRE'
           },
           replacement: function (content, node) {
-            return '\n\n```' + '\n' + node.textContent + '\n```\n\n'
+            var lang = '';
+            // 适配 github 的代码高亮写法
+            var highlightRegEx = /highlight highlight-(\S+)/;
+            if (node.parentNode.nodeName === 'DIV' && highlightRegEx.test(node.parentNode.className)){
+              lang = node.parentNode.className.match(highlightRegEx)[1]
+            }
+            // 适配 highlightjs 的代码高亮写法
+            if (node.firstChild && node.firstChild.nodeName === 'CODE'){
+              var codeEl = node.firstChild;
+              for (var _i=0; _i < codeEl.classList.length; _i++){
+                var className = codeEl.classList[_i];
+                if (!/^hljs$/i.test(className)){
+                  lang = className;
+                  break
+                }
+              }
+            }
+            if (lang){
+              lang = ' ' + lang;
+            }
+            return '\n\n```' + lang + '\n' + node.textContent + '\n```\n\n'
           }
         };
         var supConverter = {
@@ -188,7 +232,11 @@ var ConvertMarkdown = new (function(){
             return '\n: ' + content
           }
         }
-        result = toMarkdown(cleanSource, {gfm: true, converters: [prettyPrintConverter, preConverter, supConverter, subConverter, markConverter, hrefConverter, dlConverter, dtConverter, ddConverter]})
+        var divConverter = {
+          filter: 'div',
+          replacement: function (content) { return content }
+        };
+        result = toMarkdown(cleanSource, {gfm: true, converters: [prettyPrintConverter, preConverter, supConverter, subConverter, markConverter, hrefConverter, dlConverter, dtConverter, ddConverter, divConverter]})
       }
     }
     if(!!options && !!options.published){
