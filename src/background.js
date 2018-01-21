@@ -94,8 +94,13 @@ var ConvertMarkdown = new (function(){
   }
   function convertToMarkdown(source, options){
     var result = source;
+    var _$container = $("<div></div>");
+    _$container.html(source);
+    //删除掉不需要的元素
+    _$container.find(".cnblogs_code_toolbar").remove();
+    result = _$container.html();
     if(!!options && options.formate == 'markdown'){
-      var cleanSource = $.htmlClean(source, {
+      var cleanSource = $.htmlClean(result, {
     replaceStyles: [],
     allowedTags:["a","abbr","acronym","address","area","b","bdo","big","blockquote","br","caption","center","cite","code","col","colgroup","dd","del","dfn","dl","dt","em","h1","h2","h3","h4","h5","h6","hr","i","img","ins","kbd","li","map","ol","p","pre","q","s","samp","small","strike","strong","sub","sup","table","tbody","td","tfoot","th","thead","tr","tt","u","ul"],
     allowedAttributes: [['title'], ['id'], ['class'], ['alt'], ['src'], ['href'], ['a'], ['start'], ['name', ['a']]],
@@ -112,6 +117,16 @@ var ConvertMarkdown = new (function(){
           filter: function (node) {
             return node.nodeName === 'PRE' &&
             node.className === 'prettyprint'
+          },
+          replacement: function (content, node) {
+            return '\n\n```' + '\n' + node.textContent + '\n```\n\n'
+          }
+        };
+        var preConverter = {
+          filter: function (node) {
+            return node.nodeName === 'PRE' &&
+            node.firstChild &&
+            node.firstChild.nodeName !== 'CODE'
           },
           replacement: function (content, node) {
             return '\n\n```' + '\n' + node.textContent + '\n```\n\n'
@@ -173,7 +188,7 @@ var ConvertMarkdown = new (function(){
             return '\n: ' + content
           }
         }
-        result = toMarkdown(cleanSource, {gfm: true, converters: [prettyPrintConverter, supConverter, subConverter, markConverter, hrefConverter, dlConverter, dtConverter, ddConverter]})
+        result = toMarkdown(cleanSource, {gfm: true, converters: [prettyPrintConverter, preConverter, supConverter, subConverter, markConverter, hrefConverter, dlConverter, dtConverter, ddConverter]})
       }
     }
     if(!!options && !!options.published){
