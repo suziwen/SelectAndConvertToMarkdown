@@ -205,7 +205,7 @@ var ConvertMarkdown = new (function(){
             var titlePart = node.title ? ' "' + node.title + '"' : '';
             if (content === url) {
               return '<' + url + '>';
-            }else if (url.match('mailto:' + content)) {
+            }else if (url === 'mailto:' + content) {
               return '<' + content + '>'
             } else {
               return '[' + content + '](' + url + titlePart + ')'
