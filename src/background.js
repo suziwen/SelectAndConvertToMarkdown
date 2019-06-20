@@ -124,6 +124,12 @@ var ConvertMarkdown = new (function(){
         }
       }
     });
+    _$container.find("a").map(function(index, element){
+      var $element = $(element);
+      if (!$.trim($element.html())){
+         $element.remove();
+      }
+    });
     result = _$container.html();
     if(!!options && options.formate == 'markdown'){
       var cleanSource = $.htmlClean(result, {
