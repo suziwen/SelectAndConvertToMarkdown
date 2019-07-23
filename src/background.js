@@ -130,6 +130,18 @@ var ConvertMarkdown = new (function(){
          $element.remove();
       }
     });
+    _$container.find("table").map(function(index, element){
+      var $element = $(element);
+      var $thead = $element.find('thead');
+      if ($thead.length === 0 ){
+         var $tr = $element.find("tr");
+         if ($tr.length > 0) {
+           var $thead = $("<thead></thead>");
+           $thead.append($tr.first());
+           $element.prepend($thead);
+         }
+      }
+    });
     result = _$container.html();
     if(!!options && options.formate == 'markdown'){
       var cleanSource = $.htmlClean(result, {
